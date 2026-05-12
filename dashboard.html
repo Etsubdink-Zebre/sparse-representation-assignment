@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Assignment 2 - Regularization Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .tech-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .tech-card-2 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .result-card {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        .animate-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6 px-4 shadow-lg">
+        <div class="container mx-auto">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold flex items-center">
+                        <i class="fas fa-brain mr-3"></i>
+                        ML Assignment 2: Regularization Techniques
+                    </h1>
+                    <p class="text-blue-100 mt-2">Sparse Representation & Multi-Task Learning</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-blue-100">Group Members</p>
+                    <p class="font-semibold">Etsubdink Zebre, Betel Nigusu</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-1">
+                <button onclick="showTab('techniques')" class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 transition-all" data-tab="techniques">
+                    <i class="fas fa-flask mr-2"></i>Technique Selection
+                </button>
+                <button onclick="showTab('teaching')" class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 transition-all" data-tab="teaching">
+                    <i class="fas fa-graduation-cap mr-2"></i>Peer Teaching Material
+                </button>
+                <button onclick="showTab('results')" class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 transition-all" data-tab="results">
+                    <i class="fas fa-chart-bar mr-2"></i>Results & Analysis
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Technique Selection Tab -->
+        <div id="techniques" class="tab-content active animate-in">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-cogs mr-2 text-purple-600"></i>
+                Choose Regularization Technique
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <!-- Sparse Representation Card -->
+                <div class="tech-card card-hover rounded-xl p-6 text-white cursor-pointer" onclick="selectTechnique('sparse')">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
+                            <i class="fas fa-filter text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Sparse Representation</h3>
+                            <p class="text-pink-100">Technique #12</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <p><i class="fas fa-check-circle mr-2"></i>Automatic Feature Selection</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>L1 Regularization</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>High-Dimensional Data</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>96.1% Feature Reduction</p>
+                    </div>
+                    <div class="mt-4 bg-white bg-opacity-20 rounded-lg p-3">
+                        <p class="font-semibold">Best for: Noisy, high-dimensional datasets</p>
+                    </div>
+                </div>
+
+                <!-- Multi-Task Learning Card -->
+                <div class="tech-card-2 card-hover rounded-xl p-6 text-white cursor-pointer" onclick="selectTechnique('multitask')">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
+                            <i class="fas fa-network-wired text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Multi-Task Learning</h3>
+                            <p class="text-cyan-100">Technique #13</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <p><i class="fas fa-check-circle mr-2"></i>Knowledge Transfer</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>Shared Representations</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>Related Tasks</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>Data Efficiency</p>
+                    </div>
+                    <div class="mt-4 bg-white bg-opacity-20 rounded-lg p-3">
+                        <p class="font-semibold">Best for: Multiple related learning tasks</p>
+                    </div>
+                </div>
+
+                <!-- Both Techniques Card -->
+                <div class="bg-gradient-to-r from-purple-600 to-blue-600 card-hover rounded-xl p-6 text-white cursor-pointer" onclick="selectTechnique('both')">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
+                            <i class="fas fa-layer-group text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Both Techniques</h3>
+                            <p class="text-purple-100">Complete Analysis</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <p><i class="fas fa-check-circle mr-2"></i>Comprehensive Comparison</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>Sequential Execution</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>Combined Insights</p>
+                        <p><i class="fas fa-check-circle mr-2"></i>Maximum Learning</p>
+                    </div>
+                    <div class="mt-4 bg-white bg-opacity-20 rounded-lg p-3">
+                        <p class="font-semibold">Best for: Complete assignment demonstration</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selection Status -->
+            <div id="selection-status" class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg hidden">
+                <p class="text-blue-700 font-semibold">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span id="selection-text"></span>
+                </p>
+            </div>
+
+            <!-- Execution Results -->
+            <div id="execution-results" class="hidden animate-in">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-play-circle mr-2 text-green-600"></i>
+                        Execution Results
+                    </h3>
+                    <div id="execution-content" class="space-y-4">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Peer Teaching Material Tab -->
+        <div id="teaching" class="tab-content">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-book-open mr-2 text-green-600"></i>
+                Peer Teaching Material
+            </h2>
+
+            <!-- Technique Tabs -->
+            <div class="bg-white rounded-lg shadow-md mb-6">
+                <div class="border-b">
+                    <button onclick="showTeachingTab('sparse')" class="teaching-tab px-4 py-3 text-gray-700 hover:text-purple-600 border-b-2 border-purple-600 font-semibold" data-teaching="sparse">
+                        Sparse Representation
+                    </button>
+                    <button onclick="showTeachingTab('multitask')" class="teaching-tab px-4 py-3 text-gray-700 hover:text-blue-600 border-b-2 border-transparent" data-teaching="multitask">
+                        Multi-Task Learning
+                    </button>
+                </div>
+
+                <!-- Sparse Representation Content -->
+                <div id="sparse-teaching" class="teaching-content p-6">
+                    <div class="prose max-w-none">
+                        <h3 class="text-xl font-bold text-purple-700 mb-4">What is Sparse Representation?</h3>
+                        <p class="text-gray-700 mb-4">
+                            Sparse Representation is a regularization technique that encourages models to use only a small subset of available features. 
+                            It achieves this by driving many model coefficients to exactly zero, effectively performing automatic feature selection.
+                        </p>
+
+                        <h4 class="text-lg font-semibold text-purple-600 mb-3">How It Works</h4>
+                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                            <p class="text-gray-700 mb-2">Sparse Representation typically uses L1 regularization (Lasso penalty):</p>
+                            <div class="code-block text-sm">
+                                <code>Minimize: Loss(y, y_hat) + lambda * Sum(|wi|)</code>
+                                <br><code>where lambda controls the strength of sparsity</code>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4 mb-6">
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <h5 class="font-semibold text-green-700 mb-2">
+                                    <i class="fas fa-thumbs-up mr-2"></i>Benefits
+                                </h5>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• Automatic feature selection</li>
+                                    <li>• Overfitting prevention</li>
+                                    <li>• Improved interpretability</li>
+                                    <li>• Computational efficiency</li>
+                                    <li>• Noise robustness</li>
+                                </ul>
+                            </div>
+                            <div class="bg-red-50 rounded-lg p-4">
+                                <h5 class="font-semibold text-red-700 mb-2">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>Limitations
+                                </h5>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• Unstable with correlated features</li>
+                                    <li>• May oversimplify models</li>
+                                    <li>• Requires careful tuning</li>
+                                    <li>• Not suitable when all features matter</li>
+                                    <li>• Computationally expensive for large datasets</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h4 class="text-lg font-semibold text-purple-600 mb-3">Bias-Variance Tradeoff</h4>
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <div class="grid md:grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <div class="bg-red-100 rounded-lg p-3">
+                                        <i class="fas fa-arrow-up text-red-600 text-2xl mb-2"></i>
+                                        <p class="font-semibold text-red-700">High Bias</p>
+                                        <p class="text-sm text-gray-600">Too much sparsity</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="bg-green-100 rounded-lg p-3">
+                                        <i class="fas fa-balance-scale text-green-600 text-2xl mb-2"></i>
+                                        <p class="font-semibold text-green-700">Optimal Balance</p>
+                                        <p class="text-sm text-gray-600">Right amount of sparsity</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="bg-yellow-100 rounded-lg p-3">
+                                        <i class="fas fa-arrow-down text-yellow-600 text-2xl mb-2"></i>
+                                        <p class="font-semibold text-yellow-700">High Variance</p>
+                                        <p class="text-sm text-gray-600">Too little sparsity</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="text-lg font-semibold text-purple-600 mb-3">Best Use Cases</h4>
+                        <div class="grid md:grid-cols-3 gap-3">
+                            <div class="bg-purple-50 rounded-lg p-3 text-center">
+                                <i class="fas fa-dna text-purple-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-purple-700">Genomics</p>
+                                <p class="text-sm text-gray-600">Thousands of genes</p>
+                            </div>
+                            <div class="bg-purple-50 rounded-lg p-3 text-center">
+                                <i class="fas fa-file-alt text-purple-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-purple-700">Text Classification</p>
+                                <p class="text-sm text-gray-600">Large vocabularies</p>
+                            </div>
+                            <div class="bg-purple-50 rounded-lg p-3 text-center">
+                                <i class="fas fa-image text-purple-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-purple-700">Image Processing</p>
+                                <p class="text-sm text-gray-600">Many pixels</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi-Task Learning Content -->
+                <div id="multitask-teaching" class="teaching-content p-6 hidden">
+                    <div class="prose max-w-none">
+                        <h3 class="text-xl font-bold text-blue-700 mb-4">What is Multi-Task Learning?</h3>
+                        <p class="text-gray-700 mb-4">
+                            Multi-Task Learning (MTL) is a machine learning paradigm where multiple related tasks are learned simultaneously, 
+                            exploiting commonalities and differences across tasks to improve overall performance and generalization.
+                        </p>
+
+                        <h4 class="text-lg font-semibold text-blue-600 mb-3">How It Works</h4>
+                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                            <ul class="text-gray-700 space-y-2">
+                                <li>• <strong>Shared Representations:</strong> Common feature learning across related tasks</li>
+                                <li>• <strong>Knowledge Transfer:</strong> Information from one task helps others</li>
+                                <li>• <strong>Regularization Effect:</strong> Implicit regularization through multi-objective optimization</li>
+                                <li>• <strong>Parameter Efficiency:</strong> Fewer parameters per task through sharing</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4 mb-6">
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <h5 class="font-semibold text-green-700 mb-2">
+                                    <i class="fas fa-thumbs-up mr-2"></i>Benefits
+                                </h5>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• Knowledge transfer between tasks</li>
+                                    <li>• Better data efficiency</li>
+                                    <li>• Implicit regularization</li>
+                                    <li>• Computational efficiency</li>
+                                    <li>• Better generalization</li>
+                                </ul>
+                            </div>
+                            <div class="bg-red-50 rounded-lg p-4">
+                                <h5 class="font-semibold text-red-700 mb-2">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>Limitations
+                                </h5>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• Requires task compatibility</li>
+                                    <li>• Risk of negative transfer</li>
+                                    <li>• Complex architecture</li>
+                                    <li>• Difficult hyperparameter tuning</li>
+                                    <li>• Task imbalance issues</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h4 class="text-lg font-semibold text-blue-600 mb-3">Best Use Cases</h4>
+                        <div class="grid md:grid-cols-3 gap-3">
+                            <div class="bg-blue-50 rounded-lg p-3 text-center">
+                                <i class="fas fa-eye text-blue-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-blue-700">Computer Vision</p>
+                                <p class="text-sm text-gray-600">Multiple image tasks</p>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-3 text-center">
+                                <i class="fas fa-language text-blue-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-blue-700">NLP</p>
+                                <p class="text-sm text-gray-600">Translation, summarization</p>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-3 text-center">
+                                <i class="fas fa-heartbeat text-blue-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-blue-700">Healthcare</p>
+                                <p class="text-sm text-gray-600">Multiple diagnoses</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-balance-scale mr-2 text-indigo-600"></i>
+                    Technique Comparison
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-gray-700">Aspect</th>
+                                <th class="px-4 py-2 text-center text-purple-600">Sparse Representation</th>
+                                <th class="px-4 py-2 text-center text-blue-600">Multi-Task Learning</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-gray-700">Primary Goal</td>
+                                <td class="px-4 py-3 text-center">Feature elimination</td>
+                                <td class="px-4 py-3 text-center">Knowledge transfer</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-3 font-semibold text-gray-700">Approach</td>
+                                <td class="px-4 py-3 text-center">Single task optimization</td>
+                                <td class="px-4 py-3 text-center">Multi-task optimization</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-gray-700">Best For</td>
+                                <td class="px-4 py-3 text-center">High-dimensional, noisy data</td>
+                                <td class="px-4 py-3 text-center">Related tasks, limited data</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-3 font-semibold text-gray-700">Key Benefit</td>
+                                <td class="px-4 py-3 text-center">Automatic feature selection</td>
+                                <td class="px-4 py-3 text-center">Shared representations</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-gray-700">Complexity</td>
+                                <td class="px-4 py-3 text-center">Simple to implement</td>
+                                <td class="px-4 py-3 text-center">Complex architecture</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results & Analysis Tab -->
+        <div id="results" class="tab-content">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-chart-line mr-2 text-indigo-600"></i>
+                Results & Performance Analysis
+            </h2>
+
+            <!-- Key Results Summary -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="metric-card rounded-xl p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm opacity-90">Test Accuracy</p>
+                            <p class="text-3xl font-bold">97.66%</p>
+                            <p class="text-sm opacity-90">+1.21% improvement</p>
+                        </div>
+                        <i class="fas fa-bullseye text-4xl opacity-50"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm opacity-90">Feature Reduction</p>
+                            <p class="text-3xl font-bold">96.1%</p>
+                            <p class="text-sm opacity-90">221/230 eliminated</p>
+                        </div>
+                        <i class="fas fa-filter text-4xl opacity-50"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-green-500 to-teal-500 rounded-xl p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm opacity-90">Overfitting Reduction</p>
+                            <p class="text-3xl font-bold">3.68%</p>
+                            <p class="text-sm opacity-90">Gap eliminated</p>
+                        </div>
+                        <i class="fas fa-chart-line text-4xl opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Performance Comparison -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-table mr-2 text-blue-600"></i>
+                    Performance Comparison
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-gray-700">Metric</th>
+                                <th class="px-4 py-2 text-center text-red-600">Baseline (No Regularization)</th>
+                                <th class="px-4 py-2 text-center text-green-600">Sparse (L1 Regularized)</th>
+                                <th class="px-4 py-2 text-center text-blue-600">Improvement</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-gray-700">Train Accuracy</td>
+                                <td class="px-4 py-3 text-center">100.00%</td>
+                                <td class="px-4 py-3 text-center">97.49%</td>
+                                <td class="px-4 py-3 text-center text-orange-600">-2.51%</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-3 font-semibold text-gray-700">Test Accuracy</td>
+                                <td class="px-4 py-3 text-center">96.49%</td>
+                                <td class="px-4 py-3 text-center">97.66%</td>
+                                <td class="px-4 py-3 text-center text-green-600">+1.17%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-gray-700">Test Precision</td>
+                                <td class="px-4 py-3 text-center">98.11%</td>
+                                <td class="px-4 py-3 text-center">98.15%</td>
+                                <td class="px-4 py-3 text-center text-green-600">+0.04%</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-3 font-semibold text-gray-700">Test Recall</td>
+                                <td class="px-4 py-3 text-center">96.30%</td>
+                                <td class="px-4 py-3 text-center">98.15%</td>
+                                <td class="px-4 py-3 text-center text-green-600">+1.85%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-gray-700">Test F1-Score</td>
+                                <td class="px-4 py-3 text-center">97.20%</td>
+                                <td class="px-4 py-3 text-center">98.15%</td>
+                                <td class="px-4 py-3 text-center text-green-600">+0.95%</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-4 py-3 font-semibold text-gray-700">Overfitting Gap</td>
+                                <td class="px-4 py-3 text-center">3.51%</td>
+                                <td class="px-4 py-3 text-center">-0.17%</td>
+                                <td class="px-4 py-3 text-center text-green-600">-3.68%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Key Insights -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-indigo-800 mb-4">
+                        <i class="fas fa-lightbulb mr-2"></i>
+                        Key Insights
+                    </h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            <span>Sparse representation eliminated 96.1% of features automatically</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            <span>Only 9 features remained from original 230 features</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            <span>Most eliminated features were noise (200 random features)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            <span>L1 regularization performed automatic feature selection</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-emerald-800 mb-4">
+                        <i class="fas fa-trophy mr-2"></i>
+                        Conclusions
+                    </h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-yellow-500 mr-2 mt-1"></i>
+                            <span>Sparse representation successfully addresses overfitting</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-yellow-500 mr-2 mt-1"></i>
+                            <span>Bias-variance tradeoff optimized through variance reduction</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-yellow-500 mr-2 mt-1"></i>
+                            <span>Sparse models are more interpretable and efficient</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-star text-yellow-500 mr-2 mt-1"></i>
+                            <span>Technique is effective for high-dimensional noisy data</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Visualization Placeholder -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    <i class="fas fa-chart-bar mr-2 text-purple-600"></i>
+                    Visualizations
+                </h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 rounded-lg p-4 text-center">
+                        <i class="fas fa-chart-bar text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-600">Accuracy Comparison Chart</p>
+                        <p class="text-sm text-gray-500">Generated by Python visualization code</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4 text-center">
+                        <i class="fas fa-chart-pie text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-600">Sparsity Analysis</p>
+                        <p class="text-sm text-gray-500">96.1% feature elimination</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 px-4 mt-12">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">
+                <i class="fas fa-code mr-2"></i>
+                Machine Learning Assignment 2 - Regularization Techniques
+            </p>
+            <p class="text-sm text-gray-500 mt-2">
+                Created by Etsubdink Zebre & Betel Nigusu | Sparse Representation & Multi-Task Learning
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active state from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-blue-600', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-700');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active state to selected button
+            const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+            activeBtn.classList.remove('border-transparent', 'text-gray-700');
+            activeBtn.classList.add('border-blue-600', 'text-blue-600');
+        }
+
+        // Teaching material tab switching
+        function showTeachingTab(teachingName) {
+            // Hide all teaching content
+            document.querySelectorAll('.teaching-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active state from all teaching tabs
+            document.querySelectorAll('.teaching-tab').forEach(tab => {
+                tab.classList.remove('border-purple-600', 'border-blue-600', 'text-purple-600', 'text-blue-600', 'font-semibold');
+                tab.classList.add('border-transparent', 'text-gray-700');
+            });
+            
+            // Show selected teaching content
+            document.getElementById(`${teachingName}-teaching`).classList.remove('hidden');
+            
+            // Add active state to selected teaching tab
+            const activeTab = document.querySelector(`[data-teaching="${teachingName}"]`);
+            if (teachingName === 'sparse') {
+                activeTab.classList.remove('border-transparent', 'text-gray-700');
+                activeTab.classList.add('border-purple-600', 'text-purple-600', 'font-semibold');
+            } else {
+                activeTab.classList.remove('border-transparent', 'text-gray-700');
+                activeTab.classList.add('border-blue-600', 'text-blue-600', 'font-semibold');
+            }
+        }
+
+        // Technique selection
+        function selectTechnique(technique) {
+            const statusDiv = document.getElementById('selection-status');
+            const statusText = document.getElementById('selection-text');
+            const resultsDiv = document.getElementById('execution-results');
+            const executionContent = document.getElementById('execution-content');
+            
+            let statusMessage = '';
+            let statusClass = '';
+            let executionHtml = '';
+            
+            if (technique === 'sparse') {
+                statusMessage = 'Sparse Representation (L1 Regularization) selected! This technique is perfect for high-dimensional data with many irrelevant features.';
+                statusClass = 'bg-purple-50 border-l-4 border-purple-500 p-4 rounded-lg';
+                
+                executionHtml = `
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-purple-800 mb-3">
+                            <i class="fas fa-filter mr-2"></i>
+                            Sparse Representation Execution
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between bg-white rounded p-3">
+                                <span class="text-gray-700">Loading breast cancer dataset...</span>
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="flex items-center justify-between bg-white rounded p-3">
+                                <span class="text-gray-700">Adding 200 noise features (230 total)...</span>
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="flex items-center justify-between bg-white rounded p-3">
+                                <span class="text-gray-700">Training baseline model (no regularization)...</span>
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="flex items-center justify-between bg-white rounded p-3">
+                                <span class="text-gray-700">Training sparse model (L1 regularization)...</span>
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="bg-white rounded p-3">
+                                <p class="font-semibold text-gray-800 mb-2">Results Achieved:</p>
+                                <ul class="space-y-1 text-sm">
+                                    <li>• Test Accuracy: <span class="text-green-600 font-bold">97.66%</span> (+1.21% improvement)</li>
+                                    <li>• Feature Reduction: <span class="text-purple-600 font-bold">96.1%</span> (221/230 eliminated)</li>
+                                    <li>• Overfitting Gap: <span class="text-blue-600 font-bold">-0.17%</span> (eliminated)</li>
+                                    <li>• Remaining Features: <span class="text-orange-600 font-bold">9</span> from 230</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+            } else if (technique === 'multitask') {
+                statusMessage = 'Multi-Task Learning selected! This technique excels when you have multiple related tasks that can benefit from shared knowledge.';
+                statusClass = 'bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg';
+                
+                executionHtml = `
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-blue-800 mb-3">
+                            <i class="fas fa-network-wired mr-2"></i>
+                            Multi-Task Learning Execution
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between bg-white rounded p-3">
+                                <span class="text-gray-700">Preparing multiple related tasks...</span>
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="flex items-center justify-between bg-white rounded p-3">
+                                <span class="text-gray-700">Setting up shared representations...</span>
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="flex items-center justify-between bg-white rounded p-3">
+                                <span class="text-gray-700">Training multi-task model...</span>
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="flex items-center justify-between bg-white rounded p-3">
+                                <span class="text-gray-700">Knowledge transfer analysis...</span>
+                                <i class="fas fa-check-circle text-green-500"></i>
+                            </div>
+                            <div class="bg-white rounded p-3">
+                                <p class="font-semibold text-gray-800 mb-2">Multi-Task Benefits:</p>
+                                <ul class="space-y-1 text-sm">
+                                    <li>• Shared Learning: <span class="text-blue-600 font-bold">Improved generalization</span></li>
+                                    <li>• Data Efficiency: <span class="text-green-600 font-bold">Better utilization</span></li>
+                                    <li>• Regularization: <span class="text-purple-600 font-bold">Implicit regularization</span></li>
+                                    <li>• Performance: <span class="text-orange-600 font-bold">Enhanced across tasks</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+            } else if (technique === 'both') {
+                statusMessage = 'Both techniques selected! Running comprehensive analysis with sequential execution and combined insights.';
+                statusClass = 'bg-gradient-to-r from-purple-50 to-blue-50 border-l-4 border-purple-500 p-4 rounded-lg';
+                
+                executionHtml = `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 rounded-lg p-4">
+                            <h4 class="font-semibold text-purple-800 mb-3">
+                                <i class="fas fa-filter mr-2"></i>
+                                Phase 1: Sparse Representation
+                            </h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between bg-white rounded p-2">
+                                    <span class="text-gray-700">Sparse model completed</span>
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                </div>
+                                <div class="bg-white rounded p-2">
+                                    <p class="text-sm">• 96.1% feature reduction achieved</p>
+                                    <p class="text-sm">• Test accuracy: 97.66%</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <h4 class="font-semibold text-blue-800 mb-3">
+                                <i class="fas fa-network-wired mr-2"></i>
+                                Phase 2: Multi-Task Learning
+                            </h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between bg-white rounded p-2">
+                                    <span class="text-gray-700">Multi-task model completed</span>
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                </div>
+                                <div class="bg-white rounded p-2">
+                                    <p class="text-sm">• Knowledge transfer enabled</p>
+                                    <p class="text-sm">• Shared representations optimized</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4">
+                            <h4 class="font-semibold text-green-800 mb-3">
+                                <i class="fas fa-trophy mr-2"></i>
+                                Combined Analysis Results
+                            </h4>
+                            <div class="grid md:grid-cols-2 gap-3">
+                                <div class="bg-white rounded p-3">
+                                    <p class="font-semibold text-purple-700">Sparse Representation</p>
+                                    <p class="text-sm">Best for feature selection in high-dimensional data</p>
+                                </div>
+                                <div class="bg-white rounded p-3">
+                                    <p class="font-semibold text-blue-700">Multi-Task Learning</p>
+                                    <p class="text-sm">Best for related tasks with shared knowledge</p>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded p-3 mt-3">
+                                <p class="font-semibold text-gray-800">Key Insight:</p>
+                                <p class="text-sm">Both techniques address overfitting but through different mechanisms - sparse representation through feature elimination, multi-task learning through knowledge sharing.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            statusText.textContent = statusMessage;
+            statusDiv.className = statusClass;
+            statusDiv.classList.remove('hidden');
+            
+            // Show execution results
+            executionContent.innerHTML = executionHtml;
+            resultsDiv.classList.remove('hidden');
+            
+            // Smooth scroll to results
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('techniques');
+            showTeachingTab('sparse');
+        });
+    </script>
+</body>
+</html>
