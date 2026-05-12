@@ -1,15 +1,17 @@
 """
-Main Orchestrator for Sparse Representation Assignment
+Main Orchestrator for Machine Learning Assignment 2
 ===============================================================================
 
-This file orchestrates the complete sparse representation assignment by:
+This file orchestrates the complete assignment by:
 1. Displaying peer teaching material
-2. Preparing data with overfitting scenario
-3. Training baseline and sparse models
-4. Analyzing and comparing performance
-5. Generating comprehensive visualizations
+2. Demonstrating sparse representation (Technique #12)
+3. Demonstrating multi-task learning (Technique #13)
+4. Preparing data with overfitting scenario
+5. Training baseline and sparse models
+6. Analyzing and comparing performance
+7. Generating comprehensive visualizations
 
-Run this file to execute the complete assignment.
+Run this file to execute the complete assignment with multiple techniques.
 """
 
 # Import all modules
@@ -86,5 +88,43 @@ def main():
         'conclusions': conclusions
     }
 
+def demonstrate_multitask_learning():
+    """
+    Demonstrate multi-task learning (Technique #13)
+    """
+    print("\n" + "="*80)
+    print("DEMONSTRATING MULTI-TASK LEARNING (TECHNIQUE #13)")
+    print("="*80)
+    
+    try:
+        from multitask_model import main as multitask_main
+        multitask_results = multitask_main()
+        return multitask_results
+    except ImportError as e:
+        print(f"Error importing multi-task module: {e}")
+        return None
+
 if __name__ == "__main__":
-    results = main()
+    print("MACHINE LEARNING ASSIGNMENT 2 - MULTIPLE TECHNIQUES")
+    print("="*80)
+    print("Techniques Demonstrated:")
+    print("✓ #12 - Sparse Representation")
+    print("✓ #13 - Multi-Task Learning")
+    print()
+    
+    choice = input("Choose technique to run (1=Sparse, 2=Multi-Task, 3=Both): ")
+    
+    if choice == "1":
+        results = main()
+    elif choice == "2":
+        results = demonstrate_multitask_learning()
+    elif choice == "3":
+        print("\nRunning both techniques sequentially...")
+        print("-"*60)
+        results = main()
+        print("\n" + "="*60)
+        multitask_results = demonstrate_multitask_learning()
+        results['multitask'] = multitask_results
+    else:
+        print("Invalid choice. Running Sparse Representation by default.")
+        results = main()
