@@ -10,9 +10,44 @@ This module handles:
 """
 
 import numpy as np
+import json
+import os
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+
+
+def export_dataset_preview(data, output_path='dashboard/assets/imported_dataset.json'):
+    """Export imported dataset for dashboard table display."""
+    output_dir = os.path.dirname(output_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+
+    feature_names = list(data.feature_names)
+    rows = []
+    for idx, sample in enumerate(data.data):
+        row = {feature_names[i]: float(sample[i]) for i in range(len(feature_names))}
+        row["target"] = int(data.target[idx])
+        row["target_label"] = "malignant" if int(data.target[idx]) == 0 else "benign"
+        rows.append(row)
+
+    payload = {
+        "name": "breast_cancer",
+        "description": "Original imported sklearn breast cancer dataset (before synthetic noise injection).",
+        "row_count": len(rows),
+        "columns": feature_names + ["target", "target_label"],
+        "rows": rows
+    }
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, indent=2)
+
+    # Fallback for file:// mode where fetch() may be blocked.
+    js_output_path = output_path.replace('.json', '.js')
+    with open(js_output_path, 'w', encoding='utf-8') as f:
+        f.write("window.IMPORTED_DATASET = ")
+        json.dump(payload, f)
+        f.write(";")
 
 def load_and_prepare_data(noise_features=200, test_size=0.3, random_state=42):
     """
@@ -34,6 +69,9 @@ def load_and_prepare_data(noise_features=200, test_size=0.3, random_state=42):
     data = load_breast_cancer()
     X = data.data
     y = data.target
+
+    # Export dataset preview used by the dashboard "Dataset Table" tab.
+    export_dataset_preview(data)
     
     print(f"Original dataset shape: {X.shape}")
     print(f"Original features: {X.shape[1]}")
