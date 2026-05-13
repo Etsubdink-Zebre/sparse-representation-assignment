@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-numpy
-scikit-learn
-matplotlib
-=======
 numpy>=1.20.0
 matplotlib>=3.4.0
 scikit-learn>=1.0.0
 seaborn>=0.11.0
->>>>>>> bc0cbe158bbf1efaee0d613d00340e561d45997f
+
