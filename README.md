@@ -6,21 +6,21 @@ The project features a complete Python machine learning pipeline that generates 
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### 1. Launch the Interactive Dashboard (Recommended)
+Run the following script to automatically open the interactive web dashboard in your browser, where you can view all the generated charts, interactive models, and teaching materials!
+```bash
+python3 open_dashboard.py
+```
+
+### 2. Install Dependencies (If you want to run models from scratch)
 ```bash
 python3 -m pip install -r requirements.txt
 ```
 
-### 2. Generate the Models and Visualizations
-First, run the main orchestrator. This script will prepare the dataset, intentionally overfit a baseline model, apply both regularization techniques, and generate all necessary visualization charts into the `dashboard/assets/` directory.
+### 3. Generate the Models and Visualizations
+If you want to re-train the models and regenerate the visualization charts, run the main orchestrator. This script will prepare the dataset, intentionally overfit a baseline model, apply both regularization techniques, and generate new visualization charts into the `dashboard/assets/` directory.
 ```bash
 python3 main.py
-```
-
-### 3. Launch the Interactive Dashboard
-Run the server script to start a local web server and automatically open the interactive dashboard in your browser.
-```bash
-python3 run_server.py
 ```
 
 ---
