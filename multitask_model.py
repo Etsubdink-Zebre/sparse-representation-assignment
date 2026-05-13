@@ -8,6 +8,8 @@ are learned simultaneously, exploiting commonalities and differences across task
 
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+os.makedirs('dashboard/assets', exist_ok=True)
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -276,7 +278,8 @@ def visualize_multitask_results(comparison_results):
     ax4.set_title('Multi-Task Impact Summary')
     
     plt.tight_layout()
-    plt.show()
+    plt.savefig('dashboard/assets/multitask_comparison.png', dpi=300, bbox_inches='tight')
+    plt.close()
 
 def main():
     """

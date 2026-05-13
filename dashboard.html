@@ -97,7 +97,7 @@
                 Choose Regularization Technique
             </h2>
             
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
                 <!-- Sparse Representation Card -->
                 <div class="tech-card card-hover rounded-xl p-6 text-white cursor-pointer" onclick="selectTechnique('sparse')">
                     <div class="flex items-center mb-4">
@@ -142,27 +142,7 @@
                     </div>
                 </div>
 
-                <!-- Both Techniques Card -->
-                <div class="bg-gradient-to-r from-purple-600 to-blue-600 card-hover rounded-xl p-6 text-white cursor-pointer" onclick="selectTechnique('both')">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
-                            <i class="fas fa-layer-group text-2xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold">Both Techniques</h3>
-                            <p class="text-purple-100">Complete Analysis</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2 text-sm">
-                        <p><i class="fas fa-check-circle mr-2"></i>Comprehensive Comparison</p>
-                        <p><i class="fas fa-check-circle mr-2"></i>Sequential Execution</p>
-                        <p><i class="fas fa-check-circle mr-2"></i>Combined Insights</p>
-                        <p><i class="fas fa-check-circle mr-2"></i>Maximum Learning</p>
-                    </div>
-                    <div class="mt-4 bg-white bg-opacity-20 rounded-lg p-3">
-                        <p class="font-semibold">Best for: Complete assignment demonstration</p>
-                    </div>
-                </div>
+
             </div>
 
             <!-- Selection Status -->
@@ -221,6 +201,26 @@
                                 <code>Minimize: Loss(y, y_hat) + lambda * Sum(|wi|)</code>
                                 <br><code>where lambda controls the strength of sparsity</code>
                             </div>
+                        </div>
+
+                        <h4 class="text-lg font-semibold text-purple-600 mb-3 mt-6">Implementation Model</h4>
+                        <div class="bg-gray-800 rounded-lg p-4 mb-6 text-green-400 font-mono text-sm overflow-x-auto">
+<pre><code>from sklearn.linear_model import LogisticRegression
+
+# The L1 penalty acts as an automatic feature selector by 
+# forcing unimportant feature coefficients to exactly zero.
+sparse_model = LogisticRegression(
+    penalty='l1',           # Enables sparsity (Lasso)
+    solver='liblinear',     # Optimization algorithm supporting L1
+    C=0.1,                  # Inverse regularization strength 
+    max_iter=1000,
+    random_state=42
+)
+sparse_model.fit(X_train, y_train)
+
+# Analyze sparsity
+zero_coefs = sum(sparse_model.coef_[0] == 0)
+print(f"Features eliminated: {zero_coefs}")</code></pre>
                         </div>
 
                         <div class="grid md:grid-cols-2 gap-4 mb-6">
@@ -315,6 +315,31 @@
                                 <li>• <strong>Regularization Effect:</strong> Implicit regularization through multi-objective optimization</li>
                                 <li>• <strong>Parameter Efficiency:</strong> Fewer parameters per task through sharing</li>
                             </ul>
+                        </div>
+
+                        <h4 class="text-lg font-semibold text-blue-600 mb-3 mt-6">Implementation Model</h4>
+                        <div class="bg-gray-800 rounded-lg p-4 mb-6 text-green-400 font-mono text-sm overflow-x-auto">
+<pre><code>import numpy as np
+from sklearn.linear_model import LogisticRegression
+
+# 1. Train a Shared Representation Model on all tasks simultaneously
+shared_model = LogisticRegression(max_iter=1000, random_state=42)
+all_X_train = np.tile(X_train, (3, 1))          # Duplicate features for 3 tasks
+all_y_train = np.concatenate([y1, y2, y3])      # Concatenate all task labels
+shared_model.fit(all_X_train, all_y_train)      # Learn universal patterns
+
+# 2. Fine-tune task-specific models starting from the shared knowledge
+task_models = {}
+for task_name, y_train in [("Class", y1), ("Severity", y2), ("Risk", y3)]:
+    model = LogisticRegression(max_iter=1000, random_state=42)
+    
+    # Transfer knowledge from the shared model
+    model.coef_ = shared_model.coef_.copy() 
+    model.intercept_ = shared_model.intercept_.copy()
+    
+    # Fine-tune on task-specific labels
+    model.fit(X_train, y_train)
+    task_models[task_name] = model</code></pre>
                         </div>
 
                         <div class="grid md:grid-cols-2 gap-4 mb-6">
@@ -567,23 +592,25 @@
                 </div>
             </div>
 
-            <!-- Visualization Placeholder -->
+            <!-- Visualizations -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-lg font-bold text-gray-800 mb-4">
                     <i class="fas fa-chart-bar mr-2 text-purple-600"></i>
                     Visualizations
                 </h3>
-                <div class="grid md:grid-cols-2 gap-4">
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
                     <div class="bg-gray-50 rounded-lg p-4 text-center">
-                        <i class="fas fa-chart-bar text-4xl text-gray-400 mb-2"></i>
-                        <p class="text-gray-600">Accuracy Comparison Chart</p>
-                        <p class="text-sm text-gray-500">Generated by Python visualization code</p>
+                        <h4 class="font-semibold text-gray-700 mb-3">Sparse Representation: Comprehensive Comparison</h4>
+                        <img src="dashboard/assets/comprehensive_comparison.png" alt="Comprehensive Comparison" class="w-full rounded shadow-sm hover:shadow-md transition-shadow">
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4 text-center">
-                        <i class="fas fa-chart-pie text-4xl text-gray-400 mb-2"></i>
-                        <p class="text-gray-600">Sparsity Analysis</p>
-                        <p class="text-sm text-gray-500">96.1% feature elimination</p>
+                        <h4 class="font-semibold text-gray-700 mb-3">Multi-Task Learning: Performance Breakdown</h4>
+                        <img src="dashboard/assets/multitask_comparison.png" alt="Multi-Task Comparison" class="w-full rounded shadow-sm hover:shadow-md transition-shadow">
                     </div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4 text-center">
+                    <h4 class="font-semibold text-gray-700 mb-3">Confusion Matrices</h4>
+                    <img src="dashboard/assets/confusion_matrices.png" alt="Confusion Matrices" class="w-full max-w-4xl mx-auto rounded shadow-sm hover:shadow-md transition-shadow">
                 </div>
             </div>
         </div>
@@ -664,161 +691,190 @@
             let executionHtml = '';
             
             if (technique === 'sparse') {
-                statusMessage = 'Sparse Representation (L1 Regularization) selected! This technique is perfect for high-dimensional data with many irrelevant features.';
+                statusMessage = 'Sparse Representation (L1 Regularization) Interactive Demo. Adjust features to see automatic feature selection in action!';
                 statusClass = 'bg-purple-50 border-l-4 border-purple-500 p-4 rounded-lg';
                 
                 executionHtml = `
-                    <div class="bg-purple-50 rounded-lg p-4">
-                        <h4 class="font-semibold text-purple-800 mb-3">
-                            <i class="fas fa-filter mr-2"></i>
-                            Sparse Representation Execution
-                        </h4>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between bg-white rounded p-3">
-                                <span class="text-gray-700">Loading breast cancer dataset...</span>
-                                <i class="fas fa-check-circle text-green-500"></i>
+                    <div class="bg-purple-50 rounded-lg p-6">
+                        <h4 class="font-bold text-xl text-purple-800 mb-2"><i class="fas fa-sliders-h mr-2"></i>Interactive Sparse Model Demo</h4>
+                        <p class="text-sm text-gray-700 mb-6">Adjust the features below. Notice how the model completely ignores the "Noise" features because L1 regularization set their learned weights to exactly 0.0!</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-800">Tumor Radius <span class="text-xs text-purple-600">(Real Feature)</span></label>
+                                    <input type="range" id="sparse-radius" min="5" max="30" value="15" class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer">
+                                    <div class="text-xs text-gray-500 text-right mt-1" id="sparse-radius-val">15 mm</div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-800">Tumor Texture <span class="text-xs text-purple-600">(Real Feature)</span></label>
+                                    <input type="range" id="sparse-texture" min="10" max="40" value="20" class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer">
+                                    <div class="text-xs text-gray-500 text-right mt-1" id="sparse-texture-val">20</div>
+                                </div>
                             </div>
-                            <div class="flex items-center justify-between bg-white rounded p-3">
-                                <span class="text-gray-700">Adding 200 noise features (230 total)...</span>
-                                <i class="fas fa-check-circle text-green-500"></i>
+                            <div class="space-y-4">
+                                <div class="opacity-75">
+                                    <label class="block text-sm font-semibold text-gray-600">Sensor Noise A <span class="text-xs text-red-500">(Irrelevant)</span></label>
+                                    <input type="range" id="sparse-noise-a" min="0" max="100" value="50" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer">
+                                    <div class="text-xs text-gray-500 text-right mt-1" id="sparse-noise-a-val">50</div>
+                                </div>
+                                <div class="opacity-75">
+                                    <label class="block text-sm font-semibold text-gray-600">Sensor Noise B <span class="text-xs text-red-500">(Irrelevant)</span></label>
+                                    <input type="range" id="sparse-noise-b" min="0" max="100" value="50" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer">
+                                    <div class="text-xs text-gray-500 text-right mt-1" id="sparse-noise-b-val">50</div>
+                                </div>
                             </div>
-                            <div class="flex items-center justify-between bg-white rounded p-3">
-                                <span class="text-gray-700">Training baseline model (no regularization)...</span>
-                                <i class="fas fa-check-circle text-green-500"></i>
-                            </div>
-                            <div class="flex items-center justify-between bg-white rounded p-3">
-                                <span class="text-gray-700">Training sparse model (L1 regularization)...</span>
-                                <i class="fas fa-check-circle text-green-500"></i>
-                            </div>
-                            <div class="bg-white rounded p-3">
-                                <p class="font-semibold text-gray-800 mb-2">Results Achieved:</p>
-                                <ul class="space-y-1 text-sm">
-                                    <li>• Test Accuracy: <span class="text-green-600 font-bold">97.66%</span> (+1.21% improvement)</li>
-                                    <li>• Feature Reduction: <span class="text-purple-600 font-bold">96.1%</span> (221/230 eliminated)</li>
-                                    <li>• Overfitting Gap: <span class="text-blue-600 font-bold">-0.17%</span> (eliminated)</li>
-                                    <li>• Remaining Features: <span class="text-orange-600 font-bold">9</span> from 230</li>
-                                </ul>
+                        </div>
+                        
+                        <button onclick="predictSparse()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow transition transform hover:-translate-y-1">Predict Tumor Class</button>
+                        
+                        <div id="sparse-prediction-result" class="hidden mt-6 p-6 rounded-xl bg-white shadow-inner border border-purple-200 text-center animate-in">
+                            <h5 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Prediction Result</h5>
+                            <div id="sparse-class-output" class="text-4xl font-black mt-2"></div>
+                            
+                            <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <p class="text-sm font-semibold text-gray-700 mb-2">How the model calculated this:</p>
+                                <p class="text-xs font-mono text-gray-600 bg-gray-100 p-2 rounded">
+                                    Score = (Radius * 0.4) + (Texture * 0.2) + <br>
+                                    <span class="opacity-50">(Noise A * <span class="text-red-600 font-bold">0.0</span>) + (Noise B * <span class="text-red-600 font-bold">0.0</span>)</span>
+                                </p>
                             </div>
                         </div>
                     </div>
                 `;
                 
             } else if (technique === 'multitask') {
-                statusMessage = 'Multi-Task Learning selected! This technique excels when you have multiple related tasks that can benefit from shared knowledge.';
+                statusMessage = 'Multi-Task Learning Interactive Demo. See how one shared representation predicts 3 distinct outcomes!';
                 statusClass = 'bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg';
                 
                 executionHtml = `
-                    <div class="bg-blue-50 rounded-lg p-4">
-                        <h4 class="font-semibold text-blue-800 mb-3">
-                            <i class="fas fa-network-wired mr-2"></i>
-                            Multi-Task Learning Execution
-                        </h4>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between bg-white rounded p-3">
-                                <span class="text-gray-700">Preparing multiple related tasks...</span>
-                                <i class="fas fa-check-circle text-green-500"></i>
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <h4 class="font-bold text-xl text-blue-800 mb-2"><i class="fas fa-network-wired mr-2"></i>Interactive Multi-Task Demo</h4>
+                        <p class="text-sm text-gray-700 mb-6">A single shared representation computes 3 different outputs from the same core input features.</p>
+                        
+                        <div class="space-y-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-800 mb-2">Cell Consistency Score</label>
+                                <input type="range" id="mtl-consistency" min="1" max="10" value="5" class="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="text-xs text-gray-500 text-right mt-1" id="mtl-consistency-val">5 / 10</div>
                             </div>
-                            <div class="flex items-center justify-between bg-white rounded p-3">
-                                <span class="text-gray-700">Setting up shared representations...</span>
-                                <i class="fas fa-check-circle text-green-500"></i>
-                            </div>
-                            <div class="flex items-center justify-between bg-white rounded p-3">
-                                <span class="text-gray-700">Training multi-task model...</span>
-                                <i class="fas fa-check-circle text-green-500"></i>
-                            </div>
-                            <div class="flex items-center justify-between bg-white rounded p-3">
-                                <span class="text-gray-700">Knowledge transfer analysis...</span>
-                                <i class="fas fa-check-circle text-green-500"></i>
-                            </div>
-                            <div class="bg-white rounded p-3">
-                                <p class="font-semibold text-gray-800 mb-2">Multi-Task Benefits:</p>
-                                <ul class="space-y-1 text-sm">
-                                    <li>• Shared Learning: <span class="text-blue-600 font-bold">Improved generalization</span></li>
-                                    <li>• Data Efficiency: <span class="text-green-600 font-bold">Better utilization</span></li>
-                                    <li>• Regularization: <span class="text-purple-600 font-bold">Implicit regularization</span></li>
-                                    <li>• Performance: <span class="text-orange-600 font-bold">Enhanced across tasks</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-            } else if (technique === 'both') {
-                statusMessage = 'Both techniques selected! Running comprehensive analysis with sequential execution and combined insights.';
-                statusClass = 'bg-gradient-to-r from-purple-50 to-blue-50 border-l-4 border-purple-500 p-4 rounded-lg';
-                
-                executionHtml = `
-                    <div class="space-y-4">
-                        <div class="bg-purple-50 rounded-lg p-4">
-                            <h4 class="font-semibold text-purple-800 mb-3">
-                                <i class="fas fa-filter mr-2"></i>
-                                Phase 1: Sparse Representation
-                            </h4>
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-between bg-white rounded p-2">
-                                    <span class="text-gray-700">Sparse model completed</span>
-                                    <i class="fas fa-check-circle text-green-500"></i>
-                                </div>
-                                <div class="bg-white rounded p-2">
-                                    <p class="text-sm">• 96.1% feature reduction achieved</p>
-                                    <p class="text-sm">• Test accuracy: 97.66%</p>
-                                </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-800 mb-2">Cell Size Uniformity</label>
+                                <input type="range" id="mtl-uniformity" min="1" max="10" value="5" class="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="text-xs text-gray-500 text-right mt-1" id="mtl-uniformity-val">5 / 10</div>
                             </div>
                         </div>
                         
-                        <div class="bg-blue-50 rounded-lg p-4">
-                            <h4 class="font-semibold text-blue-800 mb-3">
-                                <i class="fas fa-network-wired mr-2"></i>
-                                Phase 2: Multi-Task Learning
-                            </h4>
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-between bg-white rounded p-2">
-                                    <span class="text-gray-700">Multi-task model completed</span>
-                                    <i class="fas fa-check-circle text-green-500"></i>
-                                </div>
-                                <div class="bg-white rounded p-2">
-                                    <p class="text-sm">• Knowledge transfer enabled</p>
-                                    <p class="text-sm">• Shared representations optimized</p>
-                                </div>
-                            </div>
-                        </div>
+                        <button onclick="predictMultiTask()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow transition transform hover:-translate-y-1">Process Shared Representation</button>
                         
-                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4">
-                            <h4 class="font-semibold text-green-800 mb-3">
-                                <i class="fas fa-trophy mr-2"></i>
-                                Combined Analysis Results
-                            </h4>
-                            <div class="grid md:grid-cols-2 gap-3">
-                                <div class="bg-white rounded p-3">
-                                    <p class="font-semibold text-purple-700">Sparse Representation</p>
-                                    <p class="text-sm">Best for feature selection in high-dimensional data</p>
+                        <div id="mtl-prediction-result" class="hidden mt-6 p-6 rounded-xl bg-white shadow-inner border border-blue-200 animate-in">
+                            <h5 class="text-sm font-bold text-gray-500 uppercase tracking-wider text-center mb-6">Multi-Task Predictions</h5>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                    <i class="fas fa-microscope text-blue-400 text-2xl mb-2"></i>
+                                    <p class="text-xs text-gray-600 uppercase font-bold">Task 1: Class</p>
+                                    <div id="mtl-out-class" class="font-black text-2xl mt-2"></div>
                                 </div>
-                                <div class="bg-white rounded p-3">
-                                    <p class="font-semibold text-blue-700">Multi-Task Learning</p>
-                                    <p class="text-sm">Best for related tasks with shared knowledge</p>
+                                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                    <i class="fas fa-exclamation-circle text-blue-400 text-2xl mb-2"></i>
+                                    <p class="text-xs text-gray-600 uppercase font-bold">Task 2: Severity</p>
+                                    <div id="mtl-out-severity" class="font-black text-2xl mt-2"></div>
                                 </div>
-                            </div>
-                            <div class="bg-white rounded p-3 mt-3">
-                                <p class="font-semibold text-gray-800">Key Insight:</p>
-                                <p class="text-sm">Both techniques address overfitting but through different mechanisms - sparse representation through feature elimination, multi-task learning through knowledge sharing.</p>
+                                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                    <i class="fas fa-heartbeat text-blue-400 text-2xl mb-2"></i>
+                                    <p class="text-xs text-gray-600 uppercase font-bold">Task 3: Risk</p>
+                                    <div id="mtl-out-risk" class="font-black text-2xl mt-2"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 `;
             }
             
-            statusText.textContent = statusMessage;
+            statusText.innerHTML = statusMessage;
             statusDiv.className = statusClass;
             statusDiv.classList.remove('hidden');
             
-            // Show execution results
             executionContent.innerHTML = executionHtml;
             resultsDiv.classList.remove('hidden');
             
-            // Smooth scroll to results
             setTimeout(() => {
-                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
+                attachSliderListeners();
+            }, 50);
+        }
+
+        function attachSliderListeners() {
+            const sliders = [
+                'sparse-radius', 'sparse-texture', 'sparse-noise-a', 'sparse-noise-b',
+                'mtl-consistency', 'mtl-uniformity'
+            ];
+            
+            sliders.forEach(id => {
+                const slider = document.getElementById(id);
+                const label = document.getElementById(`${id}-val`);
+                if (slider && label) {
+                    slider.addEventListener('input', (e) => {
+                        let suffix = '';
+                        if (id === 'sparse-radius') suffix = ' mm';
+                        if (id.startsWith('mtl')) suffix = ' / 10';
+                        label.innerText = `${e.target.value}${suffix}`;
+                    });
+                }
+            });
+        }
+
+        function predictSparse() {
+            const radius = parseFloat(document.getElementById('sparse-radius').value);
+            const texture = parseFloat(document.getElementById('sparse-texture').value);
+            
+            const score = (radius * 0.4) + (texture * 0.2);
+            const resDiv = document.getElementById('sparse-prediction-result');
+            const outClass = document.getElementById('sparse-class-output');
+            
+            resDiv.classList.remove('hidden');
+            
+            if (score > 12) {
+                outClass.innerText = "MALIGNANT";
+                outClass.className = "text-4xl font-black mt-2 text-red-500";
+            } else {
+                outClass.innerText = "BENIGN";
+                outClass.className = "text-4xl font-black mt-2 text-green-500";
+            }
+        }
+
+        function predictMultiTask() {
+            const consistency = parseFloat(document.getElementById('mtl-consistency').value);
+            const uniformity = parseFloat(document.getElementById('mtl-uniformity').value);
+            
+            const sharedScore = consistency + uniformity;
+            const resDiv = document.getElementById('mtl-prediction-result');
+            resDiv.classList.remove('hidden');
+            
+            const outClass = document.getElementById('mtl-out-class');
+            if (sharedScore > 10) {
+                outClass.innerText = "Malignant";
+                outClass.className = "font-black text-2xl mt-2 text-red-500";
+            } else {
+                outClass.innerText = "Benign";
+                outClass.className = "font-black text-2xl mt-2 text-green-500";
+            }
+            
+            const outSeverity = document.getElementById('mtl-out-severity');
+            if (sharedScore > 14) {
+                outSeverity.innerText = "High";
+                outSeverity.className = "font-black text-2xl mt-2 text-red-500";
+            } else if (sharedScore > 8) {
+                outSeverity.innerText = "Medium";
+                outSeverity.className = "font-black text-2xl mt-2 text-yellow-500";
+            } else {
+                outSeverity.innerText = "Low";
+                outSeverity.className = "font-black text-2xl mt-2 text-green-500";
+            }
+            
+            const outRisk = document.getElementById('mtl-out-risk');
+            const riskPct = Math.min(100, Math.max(5, (sharedScore / 20) * 100));
+            outRisk.innerText = `${Math.round(riskPct)}%`;
+            outRisk.className = riskPct > 70 ? "font-black text-2xl mt-2 text-red-500" : (riskPct > 40 ? "font-black text-2xl mt-2 text-yellow-500" : "font-black text-2xl mt-2 text-green-500");
         }
 
         // Initialize

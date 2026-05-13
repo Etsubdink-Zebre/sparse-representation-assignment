@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparse Representation Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sparse Representation</h1>
+            <p class="subtitle">L1 Regularization & Automatic Feature Selection</p>
+        </header>
+
+        <section>
+            <h2 class="section-title">
+                <span class="badge">Theory</span>
+                The Power of L1 Regularization
+            </h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>What is Sparse Representation?</h3>
+                    <p style="color: var(--text-dim);">Sparse Representation (via L1 Regularization or Lasso) forces the model to shrink the coefficients of less important features to exactly zero. Instead of just making weights smaller (like L2 Ridge), L1 acts as an <strong>automatic feature selector</strong>.</p>
+                </div>
+                <div class="card">
+                    <h3>The Bias-Variance Tradeoff</h3>
+                    <p style="color: var(--text-dim);">By aggressively eliminating features, L1 reduces model complexity. This significantly lowers <strong>Variance</strong> (overfitting) at the cost of a slight increase in <strong>Bias</strong>. The result is a much simpler, more interpretable model that generalizes better to unseen data.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">
+                <span class="badge success">Results</span>
+                Experiment Metrics
+            </h2>
+            <div class="grid">
+                <div class="card">
+                    <h3><span class="badge danger" style="margin-bottom: 15px; display: inline-block;">Baseline Model</span></h3>
+                    <p style="color: var(--text-dim); margin-bottom: 20px;">Unregularized Logistic Regression</p>
+                    <div class="metric-group">
+                        <div class="metric">
+                            <div class="metric-value" style="color: #60a5fa;">96.5<span style="font-size: 1.5rem;">%</span></div>
+                            <div class="metric-label">Test Accuracy</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value" style="color: var(--danger);">3.5<span style="font-size: 1.5rem;">%</span></div>
+                            <div class="metric-label">Overfitting Gap</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 10px 40px rgba(16, 185, 129, 0.15);">
+                    <h3><span class="badge success" style="margin-bottom: 15px; display: inline-block;">Sparse Model</span></h3>
+                    <p style="color: var(--text-dim); margin-bottom: 20px;">L1 Regularized (C=0.1)</p>
+                    <div class="metric-group">
+                        <div class="metric">
+                            <div class="metric-value" style="color: var(--success);">97.7<span style="font-size: 1.5rem;">%</span></div>
+                            <div class="metric-label">Test Accuracy</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value" style="color: var(--success);">-0.2<span style="font-size: 1.5rem;">%</span></div>
+                            <div class="metric-label">Overfitting Gap</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <h3>Sparsity Achieved: 96.1%</h3>
+                <p style="color: var(--text-dim); margin-bottom: 15px;">The L1 Regularization successfully identified the noise and eliminated 221 out of 230 features. Only 9 features were retained to make predictions!</p>
+                <ul>
+                    <li>Improved Test Accuracy by +1.21%</li>
+                    <li>Reduced Overfitting Gap by 3.68%</li>
+                    <li>Vastly improved model interpretability</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title" style="margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: var(--accent); border-color: rgba(139, 92, 246, 0.5);">Theory</span>
+                Multi-Task Learning (MTL)
+            </h2>
+            <div class="grid">
+                <div class="card" style="border-color: rgba(139, 92, 246, 0.3);">
+                    <h3 style="color: var(--accent);">Shared Representation</h3>
+                    <p style="color: var(--text-dim);">MTL trains a single model on multiple related tasks simultaneously. By forcing the model to learn a shared representation that works across different tasks (e.g., Classification, Severity, Risk), the model transfers knowledge and often generalizes better.</p>
+                </div>
+                <div class="card" style="border-color: rgba(139, 92, 246, 0.3);">
+                    <h3 style="color: var(--accent);">Experiment Metrics</h3>
+                    <div class="metric-group" style="margin-top: 10px;">
+                        <div class="metric">
+                            <div class="metric-value" style="color: #60a5fa; font-size: 2.5rem;">91.4<span style="font-size: 1.2rem;">%</span></div>
+                            <div class="metric-label">Single-Task Avg</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value" style="color: var(--accent); font-size: 2.5rem;">91.4<span style="font-size: 1.2rem;">%</span></div>
+                            <div class="metric-label">Multi-Task Avg</div>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-dim); margin-top: 20px; font-size: 0.9rem;">The multi-task model achieved identical performance across all 3 tasks, proving that a single shared backbone can effectively substitute three independent models without losing accuracy.</p>
+                </div>
+            </div>
+            
+            <div class="insight-box" style="border-color: #60a5fa; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));">
+                <h3 style="color: #60a5fa;">When to use MTL vs Sparse Representation?</h3>
+                <div class="grid" style="gap: 15px; margin-bottom: 0;">
+                    <div>
+                        <p style="color: var(--text-main); font-weight: bold; margin-bottom: 10px;">Choose Sparse (L1) When:</p>
+                        <ul>
+                            <li>Single, high-dimensional problem</li>
+                            <li>Many irrelevant/noisy features</li>
+                            <li>Feature selection is priority</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p style="color: var(--text-main); font-weight: bold; margin-bottom: 10px;">Choose Multi-Task When:</p>
+                        <ul>
+                            <li>Multiple related tasks available</li>
+                            <li>Limited training data per task</li>
+                            <li>Can benefit from knowledge transfer</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">
+                <span class="badge">Visuals</span>
+                Analytical Charts
+            </h2>
+            <div class="grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Sparse Representation: Comprehensive Comparison</h3>
+                    <img src="assets/comprehensive_comparison.png" alt="Comprehensive Comparison" class="plot-img">
+                </div>
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Multi-Task Learning: Performance Breakdown</h3>
+                    <img src="assets/multitask_comparison.png" alt="Multi-Task Comparison" class="plot-img">
+                </div>
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>Confusion Matrices</h3>
+                    <img src="assets/confusion_matrices.png" alt="Confusion Matrices" class="plot-img">
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Machine Learning Assignment 2 &copy; 2026 | Sparse Representation</p>
+        </footer>
+    </div>
+</body>
+</html>

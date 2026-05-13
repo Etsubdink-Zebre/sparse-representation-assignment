@@ -11,6 +11,10 @@ This module handles:
 
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+
+# Ensure the assets directory exists
+os.makedirs('dashboard/assets', exist_ok=True)
 
 def create_comprehensive_comparison(baseline_metrics, sparse_metrics, sparsity_analysis):
     """
@@ -102,7 +106,8 @@ def create_comprehensive_comparison(baseline_metrics, sparse_metrics, sparsity_a
     axes[1, 1].set_title(f'Feature Sparsity\n({sparsity_analysis["zero_coefficients"]}/{sparsity_analysis["total_features"]} features eliminated)')
     
     plt.tight_layout()
-    plt.show()
+    plt.savefig('dashboard/assets/comprehensive_comparison.png', dpi=300, bbox_inches='tight')
+    plt.close()
 
 def create_confusion_matrices(y_test, baseline_pred, sparse_pred):
     """
@@ -144,7 +149,8 @@ def create_confusion_matrices(y_test, baseline_pred, sparse_pred):
             axes[1].text(j, i, str(cm2[i, j]), ha="center", va="center")
     
     plt.tight_layout()
-    plt.show()
+    plt.savefig('dashboard/assets/confusion_matrices.png', dpi=300, bbox_inches='tight')
+    plt.close()
 
 def create_sparsity_visualization(model, title="Feature Coefficients"):
     """
@@ -182,7 +188,8 @@ def create_sparsity_visualization(model, title="Feature Coefficients"):
     plt.legend(handles=legend_elements)
     
     plt.tight_layout()
-    plt.show()
+    plt.savefig('dashboard/assets/sparsity_visualization.png', dpi=300, bbox_inches='tight')
+    plt.close()
 
 def print_visualization_summary():
     """Print summary of generated visualizations"""
